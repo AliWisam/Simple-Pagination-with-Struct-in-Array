@@ -1,0 +1,35 @@
+pragma solidity ^0.4.24;
+
+pragma experimental ABIEncoderV2;
+
+
+contract PaginatedNumbers {
+    
+    //array to to store strcuture : ParticipantTransaction
+    ParticipantTransaction[] public participantTransactions;
+    
+    //structure for storing hisotry of participants
+    struct ParticipantTransaction {
+        address account; // sender
+        uint256 nTickets; // number of tickets purchased `nTickets` argument in participate()
+        uint256 value; // BNB value
+    }
+    
+    function addDataToPagination() public{
+    // pushing participant data to array
+    participantTransactions.push(ParticipantTransaction(msg.sender,10,100));
+    }   
+    
+    
+    //https://stackoverflow.com/questions/48282754/what-is-the-best-approach-in-solidity-for-pagination-straightforward-and-based
+    function getPaginatedParticipantTransactions(uint resultsPerPage, uint page) external view returns (ParticipantTransaction[] memory) {
+        
+    ParticipantTransaction[] memory result = new ParticipantTransaction[](resultsPerPage);
+  
+    for(uint i = resultsPerPage * page - resultsPerPage; i < resultsPerPage * page; i++ ){
+      result[i] = participantTransactions[i];
+    } 
+    return result;
+}
+    
+}
